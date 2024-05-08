@@ -1,10 +1,6 @@
 .title {
-    -fx-background-color: #AFE1AF	;
+    -fx-background-color: #AFE1AF;
 }
-
-/*.label {*/
-/*    -fx-background-color: red;*/
-/*}*/
 
 .top {
     -fx-font-family: "Roboto";
