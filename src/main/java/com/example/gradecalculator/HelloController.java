@@ -1,6 +1,7 @@
 package com.example.gradecalculator;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -95,20 +96,27 @@ public class HelloController implements Initializable {
     private TextField[] gradeNames;
     private TextField[] scores;
 
+    private ArrayList<Category> categories;
+    private ArrayList<Grade> grades;
+
+    private int count;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gradeNames = new TextField[]{gradeName1, gradeName2, gradeName3, gradeName4, gradeName5, gradeName6, gradeName7};
         comboBoxes = new ComboBox[]{comboBox1, comboBox2, comboBox3, comboBox4, comboBox5, comboBox6, comboBox7};
         scores = new TextField[]{score1, score2, score3, score4, score5, score6, score7};
 
-//        comboBox.setItems(FXCollections.observableArrayList("Final", "Project"));
+        categories = new ArrayList<>();
+        grades = new ArrayList<>();
+        count = 0;
     }
 
     @FXML
     void addInput(ActionEvent event) {
         if (!categoryName.getText().isEmpty() && !categoryWeight.getText().isEmpty()) {
             try {
-                int weight = Integer.parseInt(categoryWeight.getText());
+                int weight = Integer.parseInt(categoryWeight.getText().trim());
                 if (weight > 0 && weight <= 100) {
                     if (!comboBox1.getItems().stream().anyMatch(item -> item.contains(categoryName.getText()))) {
                         for (ComboBox<String> c : comboBoxes) {
@@ -116,6 +124,8 @@ public class HelloController implements Initializable {
                         }
                         categoryDisplay.setText("");
                         categoryDisplay.setText(String.format("Category \"%s\" is added to the list.", categoryName.getText()));
+                        categories.add(new Category(categoryName.getText().trim(), weight));
+                        count++;
                     } else {
                         categoryDisplay.setText(String.format("Category \"%s\" is already in the list.", categoryName.getText()));
                     }
@@ -138,6 +148,14 @@ public class HelloController implements Initializable {
             }
             categoryDisplay.setText("");
             categoryDisplay.setText(String.format("Category \"%s\" is removed from the list.", categoryName.getText()));
+
+            for (int i = categories.size() - 1; i >= 0; i--) {
+                if (categories.get(i).getName().equals(categoryName.getText())) {
+                    categories.remove(i);
+                }
+            }
+
+            count--;
         }
     }
 
@@ -173,8 +191,45 @@ public class HelloController implements Initializable {
     }
 
 
+    private void getUserInput() {
+        for (int i = 0; i < 7; i++) {
+            String name = gradeNames[i].getText().trim();
+            String scoreString = scores[i].getText().trim();
+
+            try {
+                double score = Double.parseDouble(scoreString);
+                String selectedItem = comboBoxes[i].getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    int index1 = selectedItem.indexOf(" (");
+                    int index2 = selectedItem.indexOf("%");
+                    Category category = new Category(selectedItem.substring(0, index1), Integer.parseInt(selectedItem.substring(index1 + 2, index2)));
+                    grades.add(new Grade(category, name, score));
+                }
+            } catch (NumberFormatException e) {
+                categoryDisplay.setText("Score must be a whole number or a decimal number!");
+            }
+        }
+    }
+
+    private double getEachCategoryFinalGrade() {
+
+        return 0;
+    }
+
     @FXML
     void calculate(ActionEvent event) {
+        grades.clear();
+
+        for (Category c : categories) {
+            System.out.println(c.getName() + ", " + c.getWeight());
+        }
+
+        getUserInput();
+
+        for (Grade g : grades) {
+            System.out.println(g.getName() + ", " + g.getCategory().getName() + ", " + g.getCategory().getWeight() + ", " + g.getScore());
+        }
+
         finalGrade.setText("100");
     }
 
