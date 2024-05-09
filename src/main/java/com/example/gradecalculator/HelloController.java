@@ -99,8 +99,6 @@ public class HelloController implements Initializable {
     private ArrayList<Category> categories;
     private ArrayList<Grade> grades;
 
-    private int count;
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gradeNames = new TextField[]{gradeName1, gradeName2, gradeName3, gradeName4, gradeName5, gradeName6, gradeName7};
@@ -109,7 +107,6 @@ public class HelloController implements Initializable {
 
         categories = new ArrayList<>();
         grades = new ArrayList<>();
-        count = 0;
     }
 
     @FXML
@@ -125,7 +122,6 @@ public class HelloController implements Initializable {
                         categoryDisplay.setText("");
                         categoryDisplay.setText(String.format("Category \"%s\" is added to the list.", categoryName.getText()));
                         categories.add(new Category(categoryName.getText().trim(), weight));
-                        count++;
                     } else {
                         categoryDisplay.setText(String.format("Category \"%s\" is already in the list.", categoryName.getText()));
                     }
@@ -154,11 +150,8 @@ public class HelloController implements Initializable {
                     categories.remove(i);
                 }
             }
-
-            count--;
         }
     }
-
 
     public int getNumberOfRows() {
         if (gradesGridPane.getRowConstraints().isEmpty()) {
@@ -190,51 +183,68 @@ public class HelloController implements Initializable {
         gradesGridPane.getRowConstraints().add(rowConstraints);
     }
 
-
     private void getUserInput() {
         for (int i = 0; i < 7; i++) {
             String name = gradeNames[i].getText().trim();
             String scoreString = scores[i].getText().trim();
 
-            try {
-                double score = Double.parseDouble(scoreString);
-                String selectedItem = comboBoxes[i].getSelectionModel().getSelectedItem();
-                if (selectedItem != null) {
-                    int index1 = selectedItem.indexOf(" (");
-                    int index2 = selectedItem.indexOf("%");
-                    Category category = new Category(selectedItem.substring(0, index1), Integer.parseInt(selectedItem.substring(index1 + 2, index2)));
-                    grades.add(new Grade(category, name, score));
+            if (scoreString != null && !scoreString.isEmpty()) {
+                try {
+                    double score = Double.parseDouble(scoreString);
+                    String selectedItem = comboBoxes[i].getSelectionModel().getSelectedItem();
+                    if (selectedItem != null) {
+                        int index1 = selectedItem.indexOf(" (");
+                        int index2 = selectedItem.indexOf("%");
+                        Category category = new Category(selectedItem.substring(0, index1), Integer.parseInt(selectedItem.substring(index1 + 2, index2)));
+                        grades.add(new Grade(category, name, score));
+                    }
+                } catch (NumberFormatException e) {
+                    categoryDisplay.setText("Score must be a whole number or a decimal number!");
                 }
-            } catch (NumberFormatException e) {
-                categoryDisplay.setText("Score must be a whole number or a decimal number!");
             }
+
         }
     }
 
-    private double getEachCategoryFinalGrade() {
+    private double getEachCategoryFinalGrade(Category category) {
+        double gradeSum = 0;
+        int count = 0;
+        for (Grade grade : grades) {
+            if (grade.getCategory().getName().equals(category.getName())) {
+                gradeSum += grade.getScore();
+                count++;
+            }
+        }
+        double eachFinalGrade = gradeSum / (count * (100.0 / category.getWeight()));
 
-        return 0;
+        return eachFinalGrade;
     }
 
     @FXML
     void calculate(ActionEvent event) {
+        // remove all items from grades first so that the data are not duplicating
         grades.clear();
 
-        for (Category c : categories) {
-            System.out.println(c.getName() + ", " + c.getWeight());
-        }
-
+        // get user input data and store them to respective arraylist
         getUserInput();
 
-        for (Grade g : grades) {
-            System.out.println(g.getName() + ", " + g.getCategory().getName() + ", " + g.getCategory().getWeight() + ", " + g.getScore());
+        // calculate total final grade
+        double finalResult = 0;
+        int weightSum = 0;
+        for (Category category : categories) {
+            weightSum += category.getWeight();
+            if (weightSum == 100) {
+                finalResult += getEachCategoryFinalGrade(category);
+            } else {
+                categoryDisplay.setText("Total weight must be 100%");
+            }
         }
-
-        finalGrade.setText("100");
+        finalGrade.setText(String.format("%.2f", finalResult));
     }
 
     @FXML
     void clear(ActionEvent event) {
+        // clear all inputs
         categoryName.clear();
         categoryWeight.clear();
         categoryDisplay.setText("No Action!");
@@ -242,5 +252,9 @@ public class HelloController implements Initializable {
         for (TextField s : scores) { s.clear(); }
         for (ComboBox<String> c : comboBoxes) { c.getItems().clear(); }
         finalGrade.setText("");
+
+        // remove all items from both arraylists
+        categories.clear();
+        grades.clear();
     }
 }

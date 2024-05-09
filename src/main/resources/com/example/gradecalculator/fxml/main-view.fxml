@@ -270,7 +270,7 @@
                                     <Insets left="10.0" top="5.0" />
                                  </GridPane.margin>
                               </Button>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
+                              <HBox prefHeight="42.0" prefWidth="330.0" GridPane.columnSpan="2147483647">
                                  <children>
                                     <Label alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="48.0" prefWidth="113.0" text="Final Grade: ">
                                        <font>
@@ -283,7 +283,7 @@
                                           <Insets left="20.0" />
                                        </HBox.margin>
                                     </Label>
-                                    <Label fx:id="finalGrade" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="48.0" prefWidth="46.0">
+                                    <Label fx:id="finalGrade" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="86.0">
                                        <font>
                                           <Font name="Times New Roman Bold Italic" size="20.0" />
                                        </font>
@@ -295,6 +295,17 @@
                                        </HBox.margin>
                                     </Label>
                                     <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="48.0" prefWidth="69.0" text="\%">
+                                       <font>
+                                          <Font name="Times New Roman Italic" size="20.0" />
+                                       </font>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                       <padding>
+                                          <Insets left="4.0" />
+                                       </padding>
+                                    </Label>
+                                    <Label fx:id="finalWeight" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="48.0" prefWidth="69.0">
                                        <font>
                                           <Font name="Times New Roman Bold Italic" size="20.0" />
                                        </font>
