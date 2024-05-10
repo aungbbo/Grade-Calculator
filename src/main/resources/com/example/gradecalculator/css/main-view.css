@@ -5,3 +5,9 @@
 .top {
     -fx-font-family: "Roboto";
 }
+
+.grid-pane-with-border {
+    -fx-border-color: red;
+    -fx-border: 1px;
+    -fx-border-insets: 0;
+}

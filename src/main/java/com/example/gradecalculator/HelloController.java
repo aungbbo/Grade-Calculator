@@ -1,16 +1,21 @@
 package com.example.gradecalculator;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.stage.Stage;
 
 public class HelloController implements Initializable {
 
@@ -216,7 +221,6 @@ public class HelloController implements Initializable {
             }
         }
         double eachFinalGrade = gradeSum / (count * (100.0 / category.getWeight()));
-
         return eachFinalGrade;
     }
 
@@ -233,13 +237,17 @@ public class HelloController implements Initializable {
         int weightSum = 0;
         for (Category category : categories) {
             weightSum += category.getWeight();
-            if (weightSum == 100) {
-                finalResult += getEachCategoryFinalGrade(category);
-            } else {
-                categoryDisplay.setText("Total weight must be 100%");
-            }
+            finalResult += getEachCategoryFinalGrade(category);
         }
-        finalGrade.setText(String.format("%.2f", finalResult));
+
+        // check if total combined category weight is 100%
+        if (weightSum == 100) {
+            finalGrade.setText(String.format("%.2f", finalResult));
+        } else {
+            categoryDisplay.setStyle("-fx-text-fill: red");
+            categoryDisplay.setText("Total weight must be 100%");
+            finalGrade.setText("NaN");
+        }
     }
 
     @FXML
@@ -256,5 +264,19 @@ public class HelloController implements Initializable {
         // remove all items from both arraylists
         categories.clear();
         grades.clear();
+    }
+
+    @FXML
+    void showDetails(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/grade-detail.fxml"));
+            Parent root = loader.load();
+
+            Stage detailStage = new Stage();
+            detailStage.setScene(new Scene(root));
+            detailStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
