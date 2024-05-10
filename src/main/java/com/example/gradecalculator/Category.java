@@ -1,8 +1,5 @@
 package com.example.gradecalculator;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 public class Category {
     private String categoryName;
     private int categoryWeight;

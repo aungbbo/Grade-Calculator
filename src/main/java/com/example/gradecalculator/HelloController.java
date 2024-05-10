@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -103,6 +104,9 @@ public class HelloController implements Initializable {
 
     private ArrayList<Category> categories;
     private ArrayList<Grade> grades;
+    private ArrayList<Double> eachFinalGradeList;
+    private double finalResult;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -112,19 +116,22 @@ public class HelloController implements Initializable {
 
         categories = new ArrayList<>();
         grades = new ArrayList<>();
+        eachFinalGradeList = new ArrayList<>();
     }
+
 
     @FXML
     void addInput(ActionEvent event) {
+        categoryDisplay.setStyle("-fx-text-fill: red");
         if (!categoryName.getText().isEmpty() && !categoryWeight.getText().isEmpty()) {
             try {
                 int weight = Integer.parseInt(categoryWeight.getText().trim());
                 if (weight > 0 && weight <= 100) {
+                    categoryDisplay.setStyle("-fx-text-fill: green");
                     if (!comboBox1.getItems().stream().anyMatch(item -> item.contains(categoryName.getText()))) {
                         for (ComboBox<String> c : comboBoxes) {
                             c.getItems().add(String.format("%s (%s%%)", categoryName.getText(), categoryWeight.getText()));
                         }
-                        categoryDisplay.setText("");
                         categoryDisplay.setText(String.format("Category \"%s\" is added to the list.", categoryName.getText()));
                         categories.add(new Category(categoryName.getText().trim(), weight));
                     } else {
@@ -141,13 +148,14 @@ public class HelloController implements Initializable {
         }
     }
 
+
     @FXML
     void deleteInput(ActionEvent event) {
         if (comboBox1.getItems().stream().anyMatch(item -> item.contains(categoryName.getText()))) {
             for (ComboBox<String> c : comboBoxes) {
                 c.getItems().removeIf(item -> item.contains(categoryName.getText()));
             }
-            categoryDisplay.setText("");
+            categoryDisplay.setStyle("-fx-text-fill: green");
             categoryDisplay.setText(String.format("Category \"%s\" is removed from the list.", categoryName.getText()));
 
             for (int i = categories.size() - 1; i >= 0; i--) {
@@ -158,12 +166,14 @@ public class HelloController implements Initializable {
         }
     }
 
-    public int getNumberOfRows() {
+
+    int getNumberOfRows() {
         if (gradesGridPane.getRowConstraints().isEmpty()) {
             return 0;
         }
         return gradesGridPane.getRowConstraints().size();
     }
+
 
     @FXML
     void addRow(ActionEvent event) {
@@ -188,7 +198,8 @@ public class HelloController implements Initializable {
         gradesGridPane.getRowConstraints().add(rowConstraints);
     }
 
-    private void getUserInput() {
+
+    void getUserInput() {
         for (int i = 0; i < 7; i++) {
             String name = gradeNames[i].getText().trim();
             String scoreString = scores[i].getText().trim();
@@ -204,6 +215,7 @@ public class HelloController implements Initializable {
                         grades.add(new Grade(category, name, score));
                     }
                 } catch (NumberFormatException e) {
+                    categoryDisplay.setStyle("-fx-text-fill: red");
                     categoryDisplay.setText("Score must be a whole number or a decimal number!");
                 }
             }
@@ -211,7 +223,8 @@ public class HelloController implements Initializable {
         }
     }
 
-    private double getEachCategoryFinalGrade(Category category) {
+
+    double getEachCategoryFinalGrade(Category category) {
         double gradeSum = 0;
         int count = 0;
         for (Grade grade : grades) {
@@ -224,34 +237,43 @@ public class HelloController implements Initializable {
         return eachFinalGrade;
     }
 
+
     @FXML
     void calculate(ActionEvent event) {
         // remove all items from grades first so that the data are not duplicating
         grades.clear();
+        eachFinalGradeList.clear();
 
         // get user input data and store them to respective arraylist
         getUserInput();
 
         // calculate total final grade
-        double finalResult = 0;
         int weightSum = 0;
+        finalResult = 0;
         for (Category category : categories) {
             weightSum += category.getWeight();
-            finalResult += getEachCategoryFinalGrade(category);
+            double eachFinalGrade = getEachCategoryFinalGrade(category);
+            eachFinalGradeList.add(eachFinalGrade);
+            finalResult += eachFinalGrade;
+        }
+
+        for (double a : eachFinalGradeList) {
+            System.out.println(" " + a + " ");
         }
 
         // check if total combined category weight is 100%
-        if (weightSum == 100) {
-            finalGrade.setText(String.format("%.2f", finalResult));
-        } else {
+        if (weightSum != 100) {
             categoryDisplay.setStyle("-fx-text-fill: red");
-            categoryDisplay.setText("Total weight must be 100%");
-            finalGrade.setText("NaN");
+            categoryDisplay.setText("Total weight must be 100%!");
         }
+        finalGrade.setText(String.format("%.2f", finalResult));
     }
+
 
     @FXML
     void clear(ActionEvent event) {
+        categoryDisplay.setStyle("");
+
         // clear all inputs
         categoryName.clear();
         categoryWeight.clear();
@@ -266,12 +288,14 @@ public class HelloController implements Initializable {
         grades.clear();
     }
 
+
     @FXML
     void showDetails(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/grade-detail.fxml"));
             Parent root = loader.load();
-
+            GradeDetailController detailController = loader.getController();
+            detailController.setCategories(categories, eachFinalGradeList, finalResult );
             Stage detailStage = new Stage();
             detailStage.setScene(new Scene(root));
             detailStage.show();
