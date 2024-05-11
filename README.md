@@ -24,5 +24,6 @@ This is a grade calculator application built using JavaFX.
 2. Open the project in your favorite Java IDE. For optimal experience, we recommend using an IDE like IntelliJ IDEA.
 3. Within your IDE, locate the main method (in a class named HelloApplication.java) and run the application.
 4. The grade calculator window should appear as below.
-   ![alt text](https://github.com/aungbbo/Grade-Calculator/blob/master/assets/MainView.png)
-   ![alt text](https://github.com/aungbbo/Grade-Calculator/blob/master/assets/GradeDetail.png)
+
+![alt text](https://github.com/aungbbo/Grade-Calculator/blob/master/assets/MainView.png "600")
+![alt text](https://github.com/aungbbo/Grade-Calculator/blob/master/assets/GradeDetail.png "600")
