@@ -22,6 +22,6 @@
    <li>Within your IDE, locate the main method (in a class named HelloApplication.java) and run the application.</li>
    <li>The grade calculator window should appear as below.</li>
 </ol>
-<p><img src="https://github.com/aungbbo/Grade-Calculator/blob/master/assets/MainView.png" alt="alt text" width="600">
-   <img src="https://github.com/aungbbo/Grade-Calculator/blob/master/assets/GradeDetail.png" alt="alt text" width="600">
+<p><img src="https://github.com/aungbbo/Grade-Calculator/blob/master/assets/MainView.png" alt="alt text" width="400" height="275">
+   <img src="https://github.com/aungbbo/Grade-Calculator/blob/master/assets/GradeDetail.png" alt="alt text" width="400" height="150">>
 </p>
