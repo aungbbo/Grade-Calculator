@@ -70,7 +70,7 @@ public class GradeDetailController implements Initializable {
         if (categories.size() == eachFinalGradeList.size()) {
             for (int i = 0; i < categories.size(); i++) {
                 categoryList[i].setText(categories.get(i).getName());
-                gradeList[i].setText(Double.toString(eachFinalGradeList.get(i)));
+                gradeList[i].setText(String.format("%.2f", eachFinalGradeList.get(i)));
                 weightList[i].setText(Double.toString(categories.get(i).getWeight()));
             }
         }
