@@ -3,7 +3,6 @@ package com.example.gradecalculator;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -67,13 +66,14 @@ public class GradeDetailController implements Initializable {
     private double result = 0;
 
 
-    public void setCategories(ArrayList<Category> categories, ArrayList<Double> eachFinalGradeList, double result) {  // Setter method to receive categories
-        for (int i = 0; i < categories.size(); i++) {
-            categoryList[i].setText(categories.get(i).getName());
-            gradeList[i].setText(Double.toString(eachFinalGradeList.get(i)));
-            weightList[i].setText(Double.toString(categories.get(i).getWeight()));
+    public void setCategories(ArrayList<Category> categories, ArrayList<Double> eachFinalGradeList, double result) {
+        if (categories.size() == eachFinalGradeList.size()) {
+            for (int i = 0; i < categories.size(); i++) {
+                categoryList[i].setText(categories.get(i).getName());
+                gradeList[i].setText(Double.toString(eachFinalGradeList.get(i)));
+                weightList[i].setText(Double.toString(categories.get(i).getWeight()));
+            }
         }
-
         finalResult.setText(Double.toString(result));
     }
 

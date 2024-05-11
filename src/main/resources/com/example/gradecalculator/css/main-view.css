@@ -5,3 +5,18 @@
 .grid-pane-with-border {
     -fx-border-color: #19191a;
 }
+
+.new-grade-name {
+    -fx-min-width: 194px;
+    -fx-min-height: 31px;
+}
+
+.new-combo-box {
+    -fx-min-width: 164px;
+    -fx-min-height: 31px;
+}
+
+.new-score {
+    -fx-min-width: 136px;
+    -fx-min-height: 31px;
+}
